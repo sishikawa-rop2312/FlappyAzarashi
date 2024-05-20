@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameController : MonoBehaviour
 {
@@ -14,9 +15,12 @@ public class GameController : MonoBehaviour
     }
 
     State state;
+    int score;
 
     public AzarashiController azarashi;
     public GameObject blocks;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI stateText;
 
     void Start()
     {
@@ -51,6 +55,12 @@ public class GameController : MonoBehaviour
         // 各オブジェクトを無効状態にする
         azarashi.SetStreerActive(false);
         blocks.SetActive(false);
+
+        // ラベルを更新
+        scoreText.text = "Score : " + 0;
+
+        stateText.gameObject.SetActive(true);
+        stateText.text = "Ready";
     }
 
     void GameStart()
@@ -63,6 +73,10 @@ public class GameController : MonoBehaviour
 
         // 最初の入力だけゲームコントローラーから渡す
         azarashi.Flap();
+
+        // ラベルを更新
+        stateText.gameObject.SetActive(false);
+        stateText.text = "";
     }
 
 
@@ -75,6 +89,11 @@ public class GameController : MonoBehaviour
 
         // 全ScrollObjectのスクロール処理を無効にする
         foreach (ScrollObject so in scrollObjects) so.enabled = false;
+
+        // ラベルを更新
+        stateText.gameObject.SetActive(true);
+        stateText.text = "GameOver";
+
     }
 
     void Reload()
@@ -82,5 +101,11 @@ public class GameController : MonoBehaviour
         // 現在読み込んでいるシーンを再読み込み
         string currentSceneName = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentSceneName);
+    }
+
+    public void IncreaseScore()
+    {
+        score++;
+        scoreText.text = "Score : " + score;
     }
 }
